@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { ArrowLeft, Send, Trash2, Bot, User, BarChart2, MessageSquare, Info } from 'lucide-react';
 import { sessionAPI, analyticsAPI, chatAPI, userAPI } from '../api';
@@ -355,10 +355,7 @@ export default function SessionPage() {
                       nameKey="sender_name"
                       cx="50%" cy="50%"
                       outerRadius={60}
-                      label={({ payload, percent }) => {
-                        const displayName = payload?.sender_name || payload?.name || '';
-                        return `${displayName.split(' ')[0]} ${(percent*100).toFixed(0)}%`;
-                      }}
+                      label={false}
                       labelLine={false}
                     >
                       {analytics.participants.map((_, i) => (
@@ -366,6 +363,7 @@ export default function SessionPage() {
                       ))}
                     </Pie>
                     <Tooltip contentStyle={{ background: '#1e2230', border: '1px solid #ffffff12', borderRadius: 8, fontSize: 12 }} />
+                    <Legend verticalAlign="bottom" height={36} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -504,9 +502,9 @@ export default function SessionPage() {
               style={{ padding: '0.4rem', fontSize: '0.8rem', maxWidth: '120px' }}
               title="Select AI Model"
             >
-              <option value="google/gemma-4-31b-it:free">Gemma 31B (Free)</option>
-              <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Free)</option>
-              <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron Nano (Free)</option>
+              <option value="google/gemma-4-31b-it:free">Gemma 31B</option>
+              <option value="openai/gpt-oss-20b:free">GPT-OSS 20B</option>
+              <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron Nano</option>
             </select>
             <input
               className="input chat-input"

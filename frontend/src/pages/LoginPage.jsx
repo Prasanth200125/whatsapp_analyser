@@ -3,7 +3,7 @@
 // ============================================================
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MessageSquare, BarChart2, Brain, Lock } from 'lucide-react';
+import { MessageSquare, BarChart2, Brain, Lock, FileText } from 'lucide-react';
 import { authAPI } from '../api';
 import { useAuth } from '../hooks/useAuth.jsx';
 import './auth.css';
@@ -68,7 +68,7 @@ export default function LoginPage() {
           {[
             { icon: <BarChart2 size={16} />, text: 'Deep analytics — messages, timelines, word clouds' },
             { icon: <Brain size={16} />,     text: 'AI-powered Q&A — ask anything about your chat' },
-            { icon: <MessageSquare size={16} />, text: 'Supports iOS & Android WhatsApp exports' },
+            { icon: <FileText size={16} />,  text: 'Extract insights — instantly find bank details, links & emails' },
             { icon: <Lock size={16} />,      text: 'Private & secure — your data stays yours' },
           ].map((f, i) => (
             <li key={i} className="auth-feature">

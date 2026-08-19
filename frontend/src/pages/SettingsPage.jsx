@@ -118,9 +118,9 @@ export default function SettingsPage() {
                 onChange={e => setModel(e.target.value)}
                 disabled={modelSaving}
               >
-                <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Free & Fast)</option>
-                <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Free & Smart)</option>
-                <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano (Free & Balanced)</option>
+                <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Fast)</option>
+                <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Smart)</option>
+                <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano (Balanced)</option>
               </select>
             </div>
             
