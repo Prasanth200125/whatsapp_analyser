@@ -67,7 +67,7 @@ router.put('/password', async (req, res, next) => {
 /**
  * Update user preferences.
  * Body: { preferred_model: string }
- * Allowed models: gemini/gemini-flash, openai/gpt-4o, anthropic/claude-3-haiku
+ * Allowed models: gemini/gemini-flash, openai/gpt-4o, anthropic/claude-3-haiku, google/gemma-4-31b-it:free, openai/gpt-oss-20b:free, nvidia/nemotron-3-nano-30b-a3b:free
  * Returns: { success, settings }
  */
 router.put('/settings', async (req, res, next) => {
@@ -78,6 +78,9 @@ router.put('/settings', async (req, res, next) => {
       'gemini/gemini-flash',
       'openai/gpt-4o',
       'anthropic/claude-3-haiku',
+      'google/gemma-4-31b-it:free',
+      'openai/gpt-oss-20b:free',
+      'nvidia/nemotron-3-nano-30b-a3b:free'
     ];
 
     if (!preferred_model) {
