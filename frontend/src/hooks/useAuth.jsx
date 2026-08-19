@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     const storedUser = localStorage.getItem('user');
     
     // Protect against string "undefined" which breaks JSON.parse
-    if (token && storedUser && storedUser !== 'undefined') {
+    if (token && token !== 'undefined' && storedUser && storedUser !== 'undefined') {
       try {
         setUser(JSON.parse(storedUser));
       } catch (err) {
@@ -37,6 +37,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   function login(token, userData) {
+    if (!token || !userData) return;
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);

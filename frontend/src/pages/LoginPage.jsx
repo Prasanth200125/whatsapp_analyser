@@ -35,10 +35,15 @@ export default function LoginPage() {
 
     try {
       const res = await authAPI.login(form);
+
+      if (!res.data || !res.data.token) {
+        throw new Error('Invalid response from server. The API URL might be misconfigured.');
+      }
+
       login(res.data.token, res.data.user);
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      const msg = err.response?.data?.error || 'Something went wrong. Please try again.';
+      const msg = err.response?.data?.error || err.message || 'Something went wrong. Please try again.';
       setGlobalError(msg);
     } finally {
       setLoading(false);
