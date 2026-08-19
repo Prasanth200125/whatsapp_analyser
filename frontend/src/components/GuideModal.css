@@ -1,0 +1,93 @@
+/* ============================================================ */
+/* GuideModal.css                                               */
+/* ============================================================ */
+.guide-modal {
+  max-width: 500px;
+  width: 100%;
+}
+
+.guide-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.guide-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.guide-modal-content {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.guide-modal-content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.guide-modal-content ul, .guide-modal-content ol {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.guide-modal-content li {
+  margin-bottom: 0.5rem;
+}
+
+.guide-examples {
+  background-color: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.guide-examples h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guide-examples p {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  color: #94a3b8;
+}
+
+.guide-examples p:last-child {
+  margin-bottom: 0;
+}
+
+.guide-examples ul {
+  margin-bottom: 0;
+}

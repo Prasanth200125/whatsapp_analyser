@@ -1,0 +1,40 @@
+# Git ignore rules
+# ============================================================
+
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.production
+.env.staging
+
+# This file IS safe to commit:
+# .env.example  ← this should stay
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/settings.json
+.idea/
+
+# Uploaded files (should only be in S3, not local)
+uploads/
+temp/
+
+# WorkBench docs contain secrets — keep local only
+WorkBench/secrets_and_keys.md
