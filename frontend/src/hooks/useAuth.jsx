@@ -17,8 +17,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
+    
+    // Protect against string "undefined" which breaks JSON.parse
+    if (token && storedUser && storedUser !== 'undefined') {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        logout(); // Bad data, log them out
+      }
+      
       // Verify token is still valid in background
       authAPI.me()
         .then(res => setUser(res.data.user))
