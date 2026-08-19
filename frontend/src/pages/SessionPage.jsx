@@ -28,7 +28,7 @@ export default function SessionPage() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   
   const { user, setUser } = useAuth();
-  const [selectedModel, setSelectedModel] = useState(user?.preferred_model || 'gemini/gemini-flash');
+  const [selectedModel, setSelectedModel] = useState(user?.preferred_model || 'google/gemma-4-31b-it:free');
 
   // Offline detection
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function SessionPage() {
       localStorage.setItem('user', JSON.stringify({ ...user, preferred_model: newModel }));
     } catch {
       // Revert on failure
-      setSelectedModel(user?.preferred_model || 'gemini/gemini-flash');
+      setSelectedModel(user?.preferred_model || 'google/gemma-4-31b-it:free');
     }
   }
 
@@ -504,9 +504,9 @@ export default function SessionPage() {
               style={{ padding: '0.4rem', fontSize: '0.8rem', maxWidth: '120px' }}
               title="Select AI Model"
             >
-              <option value="gemini/gemini-flash">Gemini Flash</option>
-              <option value="openai/gpt-4o">GPT-4o</option>
-              <option value="anthropic/claude-3-haiku">Claude Haiku</option>
+              <option value="google/gemma-4-31b-it:free">Gemma 31B (Free)</option>
+              <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Free)</option>
+              <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron Nano (Free)</option>
             </select>
             <input
               className="input chat-input"

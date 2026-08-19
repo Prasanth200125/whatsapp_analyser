@@ -13,7 +13,7 @@ export default function SettingsPage() {
   const { user, setUser, logout } = useAuth();
 
   // Model settings state
-  const [model, setModel] = useState(user?.preferred_model || 'gemini/gemini-flash');
+  const [model, setModel] = useState(user?.preferred_model || 'google/gemma-4-31b-it:free');
   const [modelSaving, setModelSaving] = useState(false);
   const [modelSuccess, setModelSuccess] = useState('');
   const [modelError, setModelError] = useState('');
@@ -118,9 +118,9 @@ export default function SettingsPage() {
                 onChange={e => setModel(e.target.value)}
                 disabled={modelSaving}
               >
-                <option value="gemini/gemini-flash">Google Gemini Flash (Fast & Default)</option>
-                <option value="openai/gpt-4o">OpenAI GPT-4o (Smartest)</option>
-                <option value="anthropic/claude-3-haiku">Anthropic Claude 3 Haiku (Balanced)</option>
+                <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Free & Fast)</option>
+                <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Free & Smart)</option>
+                <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano (Free & Balanced)</option>
               </select>
             </div>
             
