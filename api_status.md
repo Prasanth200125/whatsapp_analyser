@@ -7,7 +7,7 @@
 <!-- This is the API contract — frontend and backend must match.  -->
 <!-- ============================================================ -->
 <!-- Status: ✅ Planned — Awaiting Implementation -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---

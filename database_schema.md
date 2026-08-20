@@ -7,7 +7,7 @@
 <!-- changes. Uses Mermaid ER diagrams for visual clarity.        -->
 <!-- ============================================================ -->
 <!-- Status: ✅ Defined — Awaiting Implementation -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---

@@ -6,7 +6,7 @@
 <!-- communicate, build, and track a software project from scratch -->
 <!-- with an AI coding assistant.                                  -->
 <!-- ============================================================ -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---

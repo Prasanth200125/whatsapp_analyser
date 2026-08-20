@@ -8,7 +8,7 @@
 <!-- concepts in simple English for the user.                      -->
 <!-- ============================================================ -->
 <!-- Status: ⬜ Not Started -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---

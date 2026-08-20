@@ -12,7 +12,7 @@
 <!-- 4. This file is only a reference/setup guide.                -->
 <!-- ============================================================ -->
 <!-- Status: 🟡 Keys Obtained — Configuration Pending -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---

@@ -6,7 +6,7 @@
 <!-- architecture decisions shift — it gets logged here with       -->
 <!-- what was gained, what was lost, and who approved it.           -->
 <!-- ============================================================ -->
-<!-- Last Updated: 2026-08-18 -->
+<!-- Last Updated: 2026-08-20 -->
 <!-- Version: 1.0 -->
 
 ---
