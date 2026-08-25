@@ -502,9 +502,9 @@ export default function SessionPage() {
               style={{ padding: '0.4rem', fontSize: '0.8rem', maxWidth: '120px' }}
               title="Select AI Model"
             >
-              <option value="google/gemma-4-31b-it:free">Gemma 31B</option>
-              <option value="openai/gpt-oss-20b:free">GPT-OSS 20B</option>
-              <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron Nano</option>
+              <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Fast)</option>
+              <option value="minimax/minimax-m3:free">MiniMax M3 (Smart)</option>
+              <option value="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free">Nemotron 3 Omni (Balanced)</option>
             </select>
             <input
               className="input chat-input"

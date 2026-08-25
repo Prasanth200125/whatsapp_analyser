@@ -119,8 +119,8 @@ export default function SettingsPage() {
                 disabled={modelSaving}
               >
                 <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Fast)</option>
-                <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (Smart)</option>
-                <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano (Balanced)</option>
+                <option value="minimax/minimax-m3:free">MiniMax M3 (Smart)</option>
+                <option value="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free">Nemotron 3 Omni (Balanced)</option>
               </select>
             </div>
             

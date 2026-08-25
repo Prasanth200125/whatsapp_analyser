@@ -56,8 +56,8 @@ const DEFAULT_MODEL = 'gemini/gemini-flash';
 
 const OPENROUTER_MODEL_MAP = {
   'gemini/gemini-flash': 'google/gemma-4-31b-it:free',
-  'openai/gpt-4o': 'openai/gpt-oss-20b:free',
-  'anthropic/claude-3-haiku': 'nvidia/nemotron-3-nano-30b-a3b:free',
+  'openai/gpt-4o': 'minimax/minimax-m3:free',
+  'anthropic/claude-3-haiku': 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
 };
 
 /**
