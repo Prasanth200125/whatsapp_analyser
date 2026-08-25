@@ -80,28 +80,28 @@ Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 
 ### Section 2: Project Setup & Dev Environment
 ```
-Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
+Progress: ▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒ 57%
 ```
-- [x] Initialize Git repository (GitHub)
+- [ ] Initialize Git repository (GitHub)
 - [x] Create Node.js + Express backend project (`/backend`) — package.json, index.js, all dependencies installed
-- [x] Create React + Vite frontend project (`/frontend`)
+- [ ] Create React + Vite frontend project (`/frontend`)
 - [x] Install all backend dependencies (express, pg, bcryptjs, jsonwebtoken, multer, aws-sdk, langfuse etc)
-- [x] Install all frontend dependencies (react-router, recharts, react-dropzone, lucide-react, axios)
+- [ ] Install all frontend dependencies (Tailwind, shadcn/ui, react-router, recharts)
 - [x] Set up `.env` file structure (fill `secrets_and_keys.md`)
-- [x] Verify all library versions are compatible (fill `techstack_versions.md`)
+- [ ] Verify all library versions are compatible (fill `techstack_versions.md`)
 
 ---
 
 ### Section 3: Database Setup & Migrations
 ```
-Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
+Progress: ░░░░░░░░░░░░░░░░░░░░ 0%
 ```
-- [x] Provision AWS RDS PostgreSQL instance (free tier — db.t3.micro)
-- [x] Connect backend to RDS (test connection)
-- [x] Write migration SQL file (all 7 tables in correct order)
-- [x] Run migration — create all tables and indexes
-- [x] Verify tables created correctly (test basic INSERT/SELECT)
-- [x] Update `database_status.md` with connection details and migration status
+- [ ] Provision AWS RDS PostgreSQL instance (free tier — db.t3.micro)
+- [ ] Connect backend to RDS (test connection)
+- [ ] Write migration SQL file (all 7 tables in correct order)
+- [ ] Run migration — create all tables and indexes
+- [ ] Verify tables created correctly (test basic INSERT/SELECT)
+- [ ] Update `database_status.md` with connection details and migration status
 
 ---
 
@@ -137,7 +137,7 @@ Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 
 ### Section 6: Rule-Based Analytics Engine
 ```
-Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
+Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒ 90%
 ```
 - [x] `GET /api/sessions/:id/analytics/overview` — total messages, date range, participant count
 - [x] `GET /api/sessions/:id/analytics/participants` — per-person breakdown (sorted by count)
@@ -149,20 +149,21 @@ Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 - [x] `GET /api/sessions/:id/analytics/response-time` — avg response time per sender
 - [x] Implement `analytics_cache` — compute once, serve cached thereafter
 - [x] Stop-word filter list (the, is, a, and, etc.) for word frequency
-- [x] Test all analytics queries on a real WhatsApp export file
+- [ ] Test all analytics queries on a real WhatsApp export file
 
 ---
 
-### Section 7: AI Engine (OpenRouter + Langfuse)
+### Section 7: AI Engine (LiteLLM + OpenRouter + Langfuse)
 ```
-Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
+Progress: ▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒ 50%
 ```
-- [x] Configure OpenRouter API key in backend `.env`
-- [x] Configure Langfuse keys in backend `.env` (auto-logging via `@langfuse/openai` wrapper)
-- [x] Verify Langfuse receives and logs traces for every AI call
-- [x] Write AI service module in backend (ai.service.js — sends messages to OpenRouter via OpenAI-compat API)
-- [x] Implement message chunking (limit context to +/- 125 messages around relevant match)
+- [ ] Set up LiteLLM Proxy server on EC2 (or local for dev) — requires AWS first
+- [ ] Configure OpenRouter API key in LiteLLM config — requires OpenRouter account
+- [ ] Configure Langfuse keys in LiteLLM config (auto-logging) — requires Langfuse account
+- [x] Write AI service module in backend (ai.service.js — sends messages to LiteLLM Proxy via OpenAI-compat API)
+- [x] Implement message chunking (limit context to last 500 messages)
 - [x] Add AI disclaimer to all AI responses
+- [ ] Test: Langfuse receives and logs traces for every AI call
 
 ---
 

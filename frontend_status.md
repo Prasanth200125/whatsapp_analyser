@@ -20,6 +20,8 @@ Frontend: [ ✅ COMPLETED ] 100%
 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 ```
 
+**Live Deployment URL:** `https://whatsapp-analyzer-frontend.onrender.com/`
+
 ---
 
 ## 🖥️ Screens Status

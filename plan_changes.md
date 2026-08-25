@@ -1,60 +1,31 @@
-# 📜 Plan Changes Log
+# 🔀 Plan Changes & Deviations
 
 <!-- ============================================================ -->
-<!-- PURPOSE: Version history of all blueprint and plan changes.   -->
-<!-- Every time scope changes, features are added/removed, or      -->
-<!-- architecture decisions shift — it gets logged here with       -->
-<!-- what was gained, what was lost, and who approved it.           -->
+<!-- PURPOSE: Tracks when and why we deviated from the original   -->
+<!-- blueprint. Helps future AI understand "why didn't we just    -->
+<!-- do X like the blueprint said?"                              -->
 <!-- ============================================================ -->
 <!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.0 -->
+<!-- Version: 1.1 -->
 
 ---
 
-## 📊 Progress
+## 📝 Change Log
 
-```
-Changes Logged: 0
-▓░░░░░░░░░░░░░░░░░░░ Tracking active
-```
+### 1. Shift from OpenAI to OpenRouter (Free Tier)
+**Date:** 2026-08-19
+**Deviation:** The original blueprint suggested using a LiteLLM Proxy in front of OpenAI (`gpt-4o`). 
+**Reasoning:** To strictly maintain a $0/month budget, we shifted directly to **OpenRouter**. OpenRouter provides an OpenAI-compatible API that gives us direct access to high-quality *free* models (`google/gemma-4-31b-it:free`, etc). 
+**Impact:** `ai.service.js` connects directly to `https://openrouter.ai/api/v1` instead of a self-hosted LiteLLM instance. This simplified the architecture and dropped AI costs to zero.
 
----
+### 2. Implementation of Database-Driven RAG vs Vector DB
+**Date:** 2026-08-19
+**Deviation:** We did not implement Pinecone or a separate vector database for AI chat context retrieval.
+**Reasoning:** To avoid syncing logic and additional infrastructure costs.
+**Impact:** We leveraged **PostgreSQL Full-Text Search** (`to_tsvector` and `websearch_to_tsquery`) to find keyword matches, then simply retrieve a +/- 125 message slice around that match. This provides excellent conversational context using only a single RDS instance.
 
-## 📌 Change Log Format
-
-Each change entry follows this structure:
-
-| Field | Description |
-|---|---|
-| **Version** | Version number (e.g., v1.1, v1.2) |
-| **Date** | When the change was made |
-| **Type** | Feature Added / Feature Removed / Architecture Change / Bug-Driven Change / Scope Change |
-| **Description** | What changed |
-| **Gained** | What we gain from this change |
-| **Lost** | What we lose (time, complexity, existing work) |
-| **Breaks Existing?** | Does this change affect any existing features? |
-| **Affected Features** | List of features impacted |
-| **Approved By** | User / AI-suggested / Both |
-| **All MDs Updated?** | Yes / No — were all status files updated? |
-
----
-
-## 📝 Change History
-
-### v1.0 — Initial Blueprint
-- **Date:** _TBD (when blueprint is first approved)_
-- **Type:** Initial Plan
-- **Description:** First approved version of the project blueprint
-- **Gained:** Starting point for the project
-- **Lost:** Nothing
-- **Breaks Existing?:** N/A
-- **Affected Features:** N/A
-- **Approved By:** _TBD_
-- **All MDs Updated?:** Yes
-
----
-
-<!-- Add new changes below this line, newest first -->
-<!-- Copy the template above for each new change -->
-
-<!-- END OF PLAN CHANGES LOG -->
+### 3. Analytics Caching
+**Date:** 2026-08-19
+**Deviation:** Analytics queries are now heavily cached in a new `analytics_cache` table.
+**Reasoning:** Large group chats (20k+ messages) were causing heavy CPU load on the free tier RDS instance every time the dashboard was loaded.
+**Impact:** Complex aggregations are computed once upon upload and stored. Subsequent loads read the JSON from `analytics_cache`.

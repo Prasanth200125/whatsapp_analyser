@@ -47,7 +47,7 @@ Database: [ ✅ COMPLETED ] 100%
 
 | # | Migration Name | Description | Date | Status | Rollback Available |
 |---|---|---|---|---|---|
-| 1 | `migrate.mjs` | Created all 7 tables: `users`, `sessions`, `messages`, `participants`, `analytics_cache`, `chat_history`, `rate_limit_log` | 2026-08-18 | ✅ | N/A |
+| 1 | `init-db.js` | Created `users`, `sessions`, `messages`, and `analytics_cache` tables | 2026-08-18 | ✅ | N/A |
 
 ---
 
@@ -56,14 +56,8 @@ Database: [ ✅ COMPLETED ] 100%
 | # | Table | Column(s) | Index Type | Purpose | Created | Status |
 |---|---|---|---|---|---|---|
 | 1 | `messages` | `session_id` | B-Tree | Fast lookup of messages per session | ✅ | ✅ |
-| 2 | `messages` | `session_id, sent_at` | B-Tree (composite) | Fast chronological queries per session | ✅ | ✅ |
-| 3 | `messages` | `session_id, sender_name` | B-Tree (composite) | Fast per-sender queries | ✅ | ✅ |
-| 4 | `messages` | `session_id, message_type` | B-Tree (composite) | Fast type-filtered queries (media, links) | ✅ | ✅ |
-| 5 | `analytics_cache` | `session_id` | B-Tree | Fast dashboard loading | ✅ | ✅ |
-| 6 | `sessions` | `user_id` | B-Tree | Fast session listing per user | ✅ | ✅ |
-| 7 | `chat_history` | `session_id` | B-Tree | Fast chat history retrieval | ✅ | ✅ |
-
-> **Note:** Full-Text Search (FTS) for AI RAG context retrieval uses `to_tsvector()` on-the-fly in `chat.routes.js` — no stored GIN index is needed for our current scale.
+| 2 | `messages` | `search_vector` | GIN | Full-Text Search for AI RAG | ✅ | ✅ |
+| 3 | `analytics_cache` | `session_id` | B-Tree | Fast dashboard loading | ✅ | ✅ |
 
 ---
 

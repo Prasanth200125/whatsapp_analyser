@@ -1,83 +1,44 @@
-# 💰 Token & Cost Status
+# 💸 Token & Cost Tracking
 
 <!-- ============================================================ -->
-<!-- PURPOSE: Session health notes, cost estimates, and honest     -->
-<!-- disclosure of AI limitations. Since AI cannot track its own   -->
-<!-- token usage, this serves as a manual checkpoint system.        -->
-<!-- Updated at the end of each major task.                         -->
+<!-- PURPOSE: Keep strict tabs on AI token usage and database      -->
+<!-- costs to ensure the project stays well within the free tier.  -->
 <!-- ============================================================ -->
-<!-- Status: 🟢 Active -->
 <!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.0 -->
+<!-- Version: 2.0 -->
 
 ---
 
-## ⚠️ Honest Limitations Disclosure
+## 🎯 Cost Goal
+**$0.00 / month**
 
-| Limitation | Reality |
-|---|---|
-| **Can AI track its own tokens?** | ❌ No — AI has no access to token counts or billing |
-| **Can AI know when session will end?** | ❌ No — AI cannot predict session termination |
-| **Can AI detect its own hallucination?** | ❌ No — not reliably; it can flag uncertainty but not guarantee accuracy |
-| **What CAN we do?** | ✅ Manual checkpoints: update `session_status.md` frequently so work can resume |
+## 💡 Current Strategy
 
----
+We have officially migrated from paid APIs (like OpenAI GPT-4o) to completely **free Open Source models** hosted on OpenRouter. Because of this, our AI generation costs are strictly $0.
 
-## 📋 Session Log
-
-<!-- Log each session with notes on what was accomplished -->
-
-| Session # | Date | Duration (approx) | Tasks Completed | Context Health | Notes |
-|---|---|---|---|---|---|
-| 1 | 2026-08-18 | _ongoing_ | WorkBench setup | 🟢 Fresh | First session — no context drift |
+### Supported Free Models
+- `google/gemma-4-31b-it:free`
+- `openai/gpt-oss-20b:free`
+- `nvidia/nemotron-3-nano-30b-a3b:free`
 
 ---
 
-## 📊 Context Health Indicators
+## 🌩️ Infrastructure Costs (AWS & Render)
 
-Use these to gauge if the session is getting too long:
+| Service | Tier Used | Current Monthly Cost | Limit / Quota |
+|---|---|---|---|
+| **AWS RDS (PostgreSQL)** | `db.t3.micro` (Free Tier) | $0.00 | 750 hours/month (1 instance = free) |
+| **AWS S3 (Storage)** | S3 Standard (Free Tier) | $0.00 | 5GB Storage, 20k GET requests |
+| **Render (Backend)** | Web Service (Free Tier) | $0.00 | 500 build minutes, 750 hrs runtime |
+| **Render (Frontend)** | Static Site (Free Tier) | $0.00 | 100GB bandwidth |
+| **OpenRouter (AI)** | Free Models Only | $0.00 | Rate limits apply, but cost is $0 |
 
-| Indicator | Status | Meaning |
-|---|---|---|
-| 🟢 Fresh | Current | AI has full context, responses are accurate |
-| 🟡 Warm | — | Session is getting long, some earlier context may be compressed |
-| 🔴 Stale | — | Session is very long, AI may forget earlier decisions — save and start fresh |
-
-**Current Status: 🟢 Fresh**
-
----
-
-## 💡 Best Practices for Long Sessions
-
-| Practice | Why |
-|---|---|
-| Save progress every 3-4 major tasks | Ensures nothing is lost if session ends |
-| Update `session_status.md` before ending | Next session can resume seamlessly |
-| If AI seems confused, ask it to re-read a specific `.md` file | Refreshes context on that topic |
-| Start a new session if context feels stale | Fresh context = better quality |
-| Keep `instructions.md` and `session_status.md` ready | Quick resume in any new session |
+## 💰 Total Estimated Cost: $0.00 / month
 
 ---
 
-## 💵 Project Cost Estimates
+## 🛑 Cost Protection Measures Activated
 
-<!-- Filled when hosting/services are chosen -->
-
-| Service | Free Tier | Monthly Cost (100 users) | Monthly Cost (10k users) | Notes |
-|---|---|---|---|---|
-| _TBD_ | | | | |
-
----
-
-## 📊 Estimated Total Monthly Cost
-
-| Scale | Estimated Cost | Notes |
-|---|---|---|
-| MVP (< 100 users) | _TBD_ | |
-| Growth (100-1,000 users) | _TBD_ | |
-| Scale (1,000-10,000 users) | _TBD_ | |
-| Large (10,000+ users) | _TBD_ | |
-
----
-
-<!-- END OF TOKEN & COST STATUS -->
+1. **RAG Context Limits**: Only +/- 125 messages are fetched per query. We do not pass the entire chat history to the LLM, preventing massive token burn.
+2. **Hardcoded Model Validation**: `user.routes.js` strictly rejects any preferred model that is not in the hardcoded allowlist, completely preventing users from maliciously switching to paid models like `gpt-4o`.
+3. **Analytics Cache**: All heavy SQL aggregations (word clouds, timelines) are calculated once and stored in `analytics_cache`, preventing RDS CPU exhaustion and keeping us well within the free tier.
