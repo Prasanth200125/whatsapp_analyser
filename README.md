@@ -33,7 +33,7 @@ This project solves this by combining a robust PostgreSQL backend for rule-based
 - **🔒 Private & Secure by Design**: Your data is parsed, stored securely in AWS S3 and PostgreSQL, and can be permanently deleted with a single click. No data is sent to AI models unless explicitly queried.
 - **📈 Rule-Based Analytics**: Get instant overviews of your chats, including participant activity, response time averages, peak messaging hours, word frequency, and emoji usage.
 - **🧠 AI-Powered Chat Q&A**: Ask direct questions (e.g., "Who apologizes more?") and the AI will analyze a contextual window of your chat using a built-in RAG pipeline.
-- **💰 Free Open-Source Models**: Powered by OpenRouter, seamlessly switch between completely free LLM models (like Gemma, GPT-OSS, Nemotron).
+- **💰 Free Open-Source Models**: Powered by OpenRouter, seamlessly switch between completely free LLM models (like Gemma, MiniMax, Nemotron Omni).
 - **📱 Cross-Platform & Responsive**: Automatically detects and parses both iOS and Android WhatsApp export formats. The UI works flawlessly on both desktop and mobile.
 
 ---
@@ -56,7 +56,7 @@ We carefully selected a modern, scalable, and secure tech stack.
 
 ### AI & Observability
 * **[OpenRouter API](https://openrouter.ai/)**: Acts as a gateway to multiple LLMs, providing a unified API for interacting with AI models.
-* **[Langfuse](https://langfuse.com/)**: Integrated for LLM observability, allowing us to trace AI calls, monitor token usage, and debug prompts.
+* **[Langfuse v4 (OpenTelemetry)](https://langfuse.com/)**: Integrated for LLM observability via the new v4 `@langfuse/tracing` and `@langfuse/otel` packages, allowing us to trace AI calls, monitor token usage, and debug prompts securely.
 
 ---
 

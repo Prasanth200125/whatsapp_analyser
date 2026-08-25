@@ -7,8 +7,8 @@
 <!-- This is the API contract — frontend and backend must match.  -->
 <!-- ============================================================ -->
 <!-- Status: ✅ COMPLETED -->
-<!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.1 -->
+<!-- Last Updated: 2026-08-25 -->
+<!-- Version: 1.2 -->
 
 ---
 
@@ -321,7 +321,7 @@ Returns: `[{ sender, avg_response_seconds }]`
 
 **Request Body:**
 ```json
-{ "preferred_ai_model": "openai/gpt-4o-mini" }
+{ "preferred_model": "minimax/minimax-m3:free" }
 ```
 
 #### `DELETE /api/users/me`

@@ -5,8 +5,8 @@
 <!-- Organized by build phase. All status files derive their      -->
 <!-- progress from this list. Updated after every task.           -->
 <!-- ============================================================ -->
-<!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.0 -->
+<!-- Last Updated: 2026-08-25 -->
+<!-- Version: 1.2 -->
 
 ---
 
@@ -42,7 +42,7 @@ Overall: [ ✅ PHASE 5 COMPLETED — PROJECT FINISHED ]
 | 4 | Authentication (Backend) | 7 | 7 | 100% | ✅ |
 | 5 | File Upload & Parsing Engine | 8 | 8 | 100% | ✅ |
 | 6 | Rule-Based Analytics Engine | 11 | 11 | 100% | ✅ |
-| 7 | AI Engine (LiteLLM + OpenRouter + Langfuse) | 6 | 6 | 100% | ✅ |
+| 7 | AI Engine (LiteLLM + OpenRouter + Langfuse v4) | 7 | 7 | 100% | ✅ |
 | 8 | Chat Q&A API (Query Router) | 4 | 4 | 100% | ✅ |
 | 9 | User Settings & Account Management | 4 | 4 | 100% | ✅ |
 | 10 | Frontend — Auth Screens | 4 | 4 | 100% | ✅ |
@@ -153,17 +153,17 @@ Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒ 90%
 
 ---
 
-### Section 7: AI Engine (LiteLLM + OpenRouter + Langfuse)
+### Section 7: AI Engine (LiteLLM + OpenRouter + Langfuse v4)
 ```
-Progress: ▓▓▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒ 50%
+Progress: ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 ```
-- [ ] Set up LiteLLM Proxy server on EC2 (or local for dev) — requires AWS first
-- [ ] Configure OpenRouter API key in LiteLLM config — requires OpenRouter account
-- [ ] Configure Langfuse keys in LiteLLM config (auto-logging) — requires Langfuse account
-- [x] Write AI service module in backend (ai.service.js — sends messages to LiteLLM Proxy via OpenAI-compat API)
+- [x] Set up OpenRouter API integration in backend
+- [x] Configure OpenRouter API key
+- [x] Configure Langfuse v4 (OpenTelemetry) keys in backend (auto-logging)
+- [x] Write AI service module in backend (ai.service.js — sends messages to OpenRouter with OTel tracing)
 - [x] Implement message chunking (limit context to last 500 messages)
 - [x] Add AI disclaimer to all AI responses
-- [ ] Test: Langfuse receives and logs traces for every AI call
+- [x] Test: Langfuse receives and logs OTEL traces for every AI call
 
 ---
 
