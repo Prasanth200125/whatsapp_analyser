@@ -45,6 +45,10 @@ const baseOpenAI = new OpenAI({
     'HTTP-Referer': process.env.SITE_URL || 'https://whatsapp-analyzer.app',
     'X-Title': 'WhatsApp Chat Analyzer',
   },
+  // Render free tier has a hard 30s request timeout.
+  // We set 25s so we can return a clean error before it force-closes the TCP connection.
+  timeout: 25000,
+  maxRetries: 1, // One automatic retry on transient failures
 });
 
 // ── AI disclaimer text ────────────────────────────────────────
@@ -54,11 +58,16 @@ export const AI_DISCLAIMER =
 // ── Default model ─────────────────────────────────────────────
 const DEFAULT_MODEL = 'gemini/gemini-flash';
 
+// Primary free models on OpenRouter — ordered by reliability.
+// If a model is deprecated/slow, update the value here.
 const OPENROUTER_MODEL_MAP = {
-  'gemini/gemini-flash': 'google/gemma-4-31b-it:free',
-  'openai/gpt-4o': 'openai/gpt-oss-20b:free',
-  'anthropic/claude-3-haiku': 'nvidia/nemotron-3-nano-30b-a3b:free',
+  'gemini/gemini-flash': 'google/gemma-2-9b-it:free',
+  'openai/gpt-4o':       'meta-llama/llama-3.2-3b-instruct:free',
+  'anthropic/claude-3-haiku': 'mistralai/mistral-7b-instruct:free',
 };
+
+// Fallback model used if the primary model fails or times out.
+const FALLBACK_MODEL = 'meta-llama/llama-3.2-3b-instruct:free';
 
 /**
  * Ask an AI question about a WhatsApp session.
@@ -119,18 +128,40 @@ If the user's message is just a simple greeting or acknowledgment (like "hi", "h
 Session: "${sessionName}"`;
 
     // ── Make the AI call (auto-traced by observeOpenAI) ──────
-    const completion = await tracedOpenAI.chat.completions.create({
-      model: modelToUse,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        {
-          role: 'user',
-          content: `Here is a sample of the chat context:\n\n${chatContext}\n\nQuestion: ${question}`,
-        },
-      ],
-      max_tokens: 1024,
-      temperature: 0.3, // Lower temperature = more factual, less creative
-    });
+    let completion;
+    try {
+      completion = await tracedOpenAI.chat.completions.create({
+        model: modelToUse,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          {
+            role: 'user',
+            content: `Here is a sample of the chat context:\n\n${chatContext}\n\nQuestion: ${question}`,
+          },
+        ],
+        max_tokens: 512, // Reduced to 512 to speed up response and stay within timeout
+        temperature: 0.3,
+      });
+    } catch (innerErr) {
+      // If the primary model fails, try the fallback model once
+      if (modelToUse !== FALLBACK_MODEL) {
+        console.warn(`Primary model "${modelToUse}" failed, retrying with fallback "${FALLBACK_MODEL}". Error: ${innerErr.message}`);
+        completion = await baseOpenAI.chat.completions.create({
+          model: FALLBACK_MODEL,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            {
+              role: 'user',
+              content: `Here is a sample of the chat context:\n\n${chatContext}\n\nQuestion: ${question}`,
+            },
+          ],
+          max_tokens: 512,
+          temperature: 0.3,
+        });
+      } else {
+        throw innerErr;
+      }
+    }
 
     const answer = completion.choices[0]?.message?.content?.trim();
 
@@ -174,15 +205,30 @@ Session: "${sessionName}"`;
     await langfuse.flushAsync();
 
     // Log the actual underlying error for debugging
-    console.error('OpenRouter API Error:', error);
+    console.error('OpenRouter API Error:', error.message || error);
 
-    // Rethrow with clean message for the caller to handle gracefully
-    throw new AIServiceError(
-      error.message.includes('Rate limit')
-        ? 'AI service is currently rate-limited. Please try again in a moment.'
-        : 'AI service is temporarily unavailable. Rule-based analytics still work.',
-      error
-    );
+    // Classify the error and rethrow with a clean, user-friendly message
+    const msg = error.message || '';
+    let userMessage;
+    if (msg.includes('Rate limit') || error.status === 429) {
+      userMessage = 'AI service is currently rate-limited. Please try again in a moment.';
+    } else if (
+      msg.includes('stream reading error') ||
+      msg.includes('ECONNRESET') ||
+      msg.includes('forcibly closed') ||
+      msg.includes('timed out') ||
+      error.code === 'ECONNRESET' ||
+      error.code === 'ERR_STREAM_DESTROYED'
+    ) {
+      // TCP connection was reset — most likely a Render timeout or model unresponsive
+      userMessage = 'The AI model took too long to respond. Try a shorter question or switch to a different model in Settings.';
+    } else if (error.status === 401 || error.status === 403) {
+      userMessage = 'AI service authentication failed. Please contact support.';
+    } else {
+      userMessage = 'AI service is temporarily unavailable. Rule-based analytics still work.';
+    }
+
+    throw new AIServiceError(userMessage, error);
   }
 }
 

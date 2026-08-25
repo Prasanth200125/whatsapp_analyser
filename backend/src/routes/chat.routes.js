@@ -195,7 +195,7 @@ router.get('/:id/chat/history', async (req, res, next) => {
     if (!session) return;
 
     const result = await query(
-      `SELECT id, question, answer, engine_used, ai_model_used as "modelUsed", created_at
+      `SELECT id, question, answer, engine_used, ai_model as "modelUsed", created_at
        FROM chat_history
        WHERE session_id = $1
        ORDER BY created_at ASC`,
