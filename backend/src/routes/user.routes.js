@@ -79,8 +79,8 @@ router.put('/settings', async (req, res, next) => {
       'openai/gpt-4o',
       'anthropic/claude-3-haiku',
       'google/gemma-4-31b-it:free',
-      'openai/gpt-oss-20b:free',
-      'nvidia/nemotron-3-nano-30b-a3b:free'
+      'minimax/minimax-m3:free',
+      'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free'
     ];
 
     if (!preferred_model) {
