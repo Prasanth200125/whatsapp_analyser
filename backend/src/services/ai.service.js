@@ -22,18 +22,18 @@
 
 import OpenAI from 'openai';
 import { observeOpenAI } from '@langfuse/openai';
-import { Langfuse } from 'langfuse';
+import { LangfuseSpanProcessor } from '@langfuse/otel';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import { startActiveObservation, propagateAttributes, updateActiveObservation } from '@langfuse/tracing';
 
 // ── Langfuse client (server-side) ────────────────────────────
 // Uses LANGFUSE_SECRET_KEY, LANGFUSE_PUBLIC_KEY, LANGFUSE_BASE_URL
 // from environment variables (auto-detected by the SDK).
-const langfuse = new Langfuse({
-  secretKey: process.env.LANGFUSE_SECRET_KEY,
-  publicKey: process.env.LANGFUSE_PUBLIC_KEY,
-  baseUrl: process.env.LANGFUSE_BASE_URL,
-  // Flush traces on process exit (important for short-lived scripts)
-  flushAt: 1,
+const langfuseSpanProcessor = new LangfuseSpanProcessor();
+const provider = new NodeTracerProvider({
+  spanProcessors: [langfuseSpanProcessor],
 });
+provider.register();
 
 // ── OpenAI-compatible client pointing to OpenRouter ──────────
 // OpenRouter is fully compatible with the OpenAI API spec.
@@ -80,10 +80,8 @@ export async function askAI({ question, sessionId, userId, chatContext, sessionN
 
   // ── Create a parent trace for the entire Q&A interaction ────
   // This groups the router span + LLM generation under one trace.
-  const trace = langfuse.trace({
-    name: 'chat-response',
-    // Input: only the user's question — clean, not internal args
-    input: question,
+  return propagateAttributes({
+    traceName: 'chat-response',
     userId: userId,
     sessionId: sessionId,
     metadata: {
@@ -91,23 +89,23 @@ export async function askAI({ question, sessionId, userId, chatContext, sessionN
       modelRequested: modelToUse,
     },
     tags: ['chat', 'ai-engine'],
-  });
+  }, async () => {
+    // Input: only the user's question — clean, not internal args
+    updateActiveObservation({ input: question });
 
-  try {
-    // ── Span: query router decision ──────────────────────────
-    const routerSpan = trace.span({
-      name: 'query-router',
-      input: { question, engine: 'ai' },
-    });
-    routerSpan.end({ output: { routed_to: 'ai', model: modelToUse } });
+    try {
+      // ── Span: query router decision ──────────────────────────
+      await startActiveObservation('query-router', async (span) => {
+        updateActiveObservation({ input: { question, engine: 'ai' } });
+        span.end({ output: { routed_to: 'ai', model: modelToUse } });
+      });
 
-    // ── Wrap the OpenAI client with Langfuse observability ───
-    // observeOpenAI wraps the client for this specific trace,
-    // so the generation is nested inside our parent trace above.
-    const tracedOpenAI = observeOpenAI(baseOpenAI, {
-      parent: trace,
-      generationName: 'ai-chat',  // Descriptive name for the generation
-    });
+      // ── Wrap the OpenAI client with Langfuse observability ───
+      // observeOpenAI wraps the client for this specific trace,
+      // so the generation is nested inside our parent trace above.
+      const tracedOpenAI = observeOpenAI(baseOpenAI, {
+        generationName: 'ai-chat',  // Descriptive name for the generation
+      });
 
     // ── Build the system prompt ──────────────────────────────
     const systemPrompt = `You are a helpful assistant that answers questions about WhatsApp chat conversations.
@@ -141,7 +139,7 @@ Session: "${sessionName}"`;
     const latencyMs = Date.now() - startTime;
 
     // ── Update trace with final output and metadata ──────────
-    trace.update({
+    updateActiveObservation({
       output: answer,
       metadata: {
         sessionName,
@@ -152,7 +150,7 @@ Session: "${sessionName}"`;
     });
 
     // Ensure trace is sent before returning
-    await langfuse.flushAsync();
+    await langfuseSpanProcessor.forceFlush();
 
     return {
       answer,
@@ -165,13 +163,13 @@ Session: "${sessionName}"`;
     const latencyMs = Date.now() - startTime;
 
     // Record failure in Langfuse
-    trace.update({
+    updateActiveObservation({
       output: null,
       metadata: { error: error.message, latencyMs },
       level: 'ERROR',
     });
 
-    await langfuse.flushAsync();
+    await langfuseSpanProcessor.forceFlush();
 
     // Log the actual underlying error for debugging
     console.error('OpenRouter API Error:', error);
@@ -184,6 +182,7 @@ Session: "${sessionName}"`;
       error
     );
   }
+  });
 }
 
 /**
@@ -234,5 +233,5 @@ export class AIServiceError extends Error {
  * Call this on app shutdown to ensure no traces are lost.
  */
 export async function flushLangfuse() {
-  await langfuse.flushAsync();
+  await langfuseSpanProcessor.forceFlush();
 }

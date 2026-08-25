@@ -8,7 +8,9 @@
 import 'dotenv/config';
 import OpenAI from 'openai';
 import { observeOpenAI } from '@langfuse/openai';
-import { Langfuse } from 'langfuse';
+import { LangfuseSpanProcessor } from '@langfuse/otel';
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
+import { startActiveObservation, propagateAttributes, updateActiveObservation } from '@langfuse/tracing';
 
 console.log('🔍 Testing Langfuse + OpenRouter connection...\n');
 
@@ -35,12 +37,11 @@ if (missing) {
   process.exit(1);
 }
 
-const langfuse = new Langfuse({
-  secretKey: process.env.LANGFUSE_SECRET_KEY,
-  publicKey: process.env.LANGFUSE_PUBLIC_KEY,
-  baseUrl: process.env.LANGFUSE_BASE_URL,
-  flushAt: 1,
+const langfuseSpanProcessor = new LangfuseSpanProcessor();
+const provider = new NodeTracerProvider({
+  spanProcessors: [langfuseSpanProcessor],
 });
+provider.register();
 
 const baseOpenAI = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
@@ -54,32 +55,34 @@ const baseOpenAI = new OpenAI({
 try {
   console.log('\n🤖 Sending test request via OpenRouter → Gemini Flash...');
 
-  const trace = langfuse.trace({
-    name: 'test-connection',
-    input: 'Connection test',
-    metadata: { test: true },
+  await propagateAttributes({
+    traceName: 'test-connection',
     tags: ['test'],
+    metadata: { test: "true" },
+  }, async () => {
+    await startActiveObservation('test-generation', async (span) => {
+      updateActiveObservation({ input: 'Connection test' });
+      const tracedClient = observeOpenAI(baseOpenAI, {
+        generationName: 'test-generation',
+      });
+
+      const response = await tracedClient.chat.completions.create({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'user', content: 'Reply with exactly: "WhatsApp Analyzer is connected!"' },
+        ],
+        max_tokens: 50,
+      });
+
+      const answer = response.choices[0]?.message?.content;
+      console.log(`\n✅ AI Response: "${answer}"`);
+
+      updateActiveObservation({ output: answer });
+      span.end();
+    });
   });
 
-  const tracedClient = observeOpenAI(baseOpenAI, {
-    parent: trace,
-    generationName: 'test-generation',
-  });
-
-  const response = await tracedClient.chat.completions.create({
-    model: 'google/gemini-2.5-flash',
-    messages: [
-      { role: 'user', content: 'Reply with exactly: "WhatsApp Analyzer is connected!"' },
-    ],
-    max_tokens: 50,
-  });
-
-  const answer = response.choices[0]?.message?.content;
-  console.log(`\n✅ AI Response: "${answer}"`);
-
-  trace.update({ output: answer });
-
-  await langfuse.flushAsync();
+  await langfuseSpanProcessor.forceFlush();
   console.log('\n✅ Langfuse trace flushed successfully!');
   console.log('   → Go to https://us.cloud.langfuse.com to see the trace.');
   console.log('\n🎉 All connections working! You can delete this test file now.\n');
