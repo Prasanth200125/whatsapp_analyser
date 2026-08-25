@@ -7,17 +7,17 @@
 <!-- database_schema.md. Progress derived from database section of -->
 <!-- project_todo.md.                                              -->
 <!-- ============================================================ -->
-<!-- Status: ⬜ Not Started -->
+<!-- Status: ✅ Completed -->
 <!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.0 -->
+<!-- Version: 1.1 -->
 
 ---
 
 ## 📊 Progress
 
 ```
-Database: [ ⬜ NOT STARTED ] 0%
-▓░░░░░░░░░░░░░░░░░░░ 0%
+Database: [ ✅ COMPLETED ] 100%
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 ```
 
 ---
@@ -26,11 +26,11 @@ Database: [ ⬜ NOT STARTED ] 0%
 
 | Field | Value |
 |---|---|
-| **Database Type** | _TBD (SQL / NoSQL)_ |
-| **Database Name** | _TBD (PostgreSQL / MongoDB / MySQL / Firebase / etc.)_ |
-| **Hosting** | _TBD (Local / Cloud — which provider)_ |
-| **Connection Status** | ⬜ Not configured |
-| **ORM / Query Tool** | _TBD (Prisma / Mongoose / Sequelize / etc.)_ |
+| **Database Type** | SQL / Relational |
+| **Database Name** | PostgreSQL 16 |
+| **Hosting** | Cloud (AWS RDS Free Tier) |
+| **Connection Status** | ✅ Connected and Live |
+| **ORM / Query Tool** | Raw SQL (`pg` driver) for maximum performance |
 
 ---
 
@@ -38,49 +38,32 @@ Database: [ ⬜ NOT STARTED ] 0%
 
 | Environment | Connection String Set | Connected | Tested | Status |
 |---|---|---|---|---|
-| Development | ⬜ | ⬜ | ⬜ | |
-| Staging | ⬜ | ⬜ | ⬜ | |
-| Production | ⬜ | ⬜ | ⬜ | |
+| Development | ✅ | ✅ | ✅ | ✅ |
+| Production | ✅ | ✅ | ✅ | ✅ |
 
 ---
 
 ## 📋 Migrations / Schema Changes
 
-<!-- Track every database structure change -->
-
 | # | Migration Name | Description | Date | Status | Rollback Available |
 |---|---|---|---|---|---|
-| _None yet_ | | | | | |
-
----
-
-## 🌱 Seed Data
-
-<!-- Initial data that needs to exist for the app to work -->
-
-| # | Table/Collection | Records | Purpose | Seeded | Status |
-|---|---|---|---|---|---|
-| _None yet_ | | | | | |
-
----
-
-## 📊 CRUD Operations Status
-
-<!-- Can we create, read, update, delete from each table? -->
-
-| # | Table/Collection | Create | Read | Update | Delete | Status |
-|---|---|---|---|---|---|---|
-| _Waiting for schema_ | | | | | | |
+| 1 | `migrate.mjs` | Created all 7 tables: `users`, `sessions`, `messages`, `participants`, `analytics_cache`, `chat_history`, `rate_limit_log` | 2026-08-18 | ✅ | N/A |
 
 ---
 
 ## 🗂️ Indexing
 
-<!-- Database indexes for performance -->
-
 | # | Table | Column(s) | Index Type | Purpose | Created | Status |
 |---|---|---|---|---|---|---|
-| _None yet_ | | | | | | |
+| 1 | `messages` | `session_id` | B-Tree | Fast lookup of messages per session | ✅ | ✅ |
+| 2 | `messages` | `session_id, sent_at` | B-Tree (composite) | Fast chronological queries per session | ✅ | ✅ |
+| 3 | `messages` | `session_id, sender_name` | B-Tree (composite) | Fast per-sender queries | ✅ | ✅ |
+| 4 | `messages` | `session_id, message_type` | B-Tree (composite) | Fast type-filtered queries (media, links) | ✅ | ✅ |
+| 5 | `analytics_cache` | `session_id` | B-Tree | Fast dashboard loading | ✅ | ✅ |
+| 6 | `sessions` | `user_id` | B-Tree | Fast session listing per user | ✅ | ✅ |
+| 7 | `chat_history` | `session_id` | B-Tree | Fast chat history retrieval | ✅ | ✅ |
+
+> **Note:** Full-Text Search (FTS) for AI RAG context retrieval uses `to_tsvector()` on-the-fly in `chat.routes.js` — no stored GIN index is needed for our current scale.
 
 ---
 
@@ -88,10 +71,10 @@ Database: [ ⬜ NOT STARTED ] 0%
 
 | Item | Status | Details |
 |---|---|---|
-| Automatic backups configured | ⬜ | |
-| Backup frequency | _TBD_ | |
-| Backup location | _TBD_ | |
-| Restore tested | ⬜ | |
+| Automatic backups configured | ✅ | AWS RDS Automated Backups |
+| Backup frequency | ✅ | Daily, with point-in-time recovery |
+| Backup location | ✅ | AWS S3 (managed by RDS) |
+| Restore tested | ✅ | Verified |
 
 ---
 

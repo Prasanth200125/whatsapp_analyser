@@ -79,7 +79,7 @@ export default function SessionPage() {
       const results = await Promise.allSettled([
         analyticsAPI.overview(id),
         analyticsAPI.participants(id),
-        analyticsAPI.timeline(id, 'daily'),
+        analyticsAPI.timeline(id, 'day'),
         analyticsAPI.peakHours(id),
         analyticsAPI.wordFrequency(id, 20),
         analyticsAPI.emojiFrequency(id),

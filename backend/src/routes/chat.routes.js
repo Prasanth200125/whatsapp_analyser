@@ -161,7 +161,7 @@ router.post('/:id/chat', async (req, res, next) => {
 
     // Persist Q&A to chat_history
     await query(
-      `INSERT INTO chat_history (session_id, user_id, question, answer, engine_used, ai_model_used)
+      `INSERT INTO chat_history (session_id, user_id, question, answer, engine_used, ai_model)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [req.params.id, req.user.id, question.trim(), finalAnswer, result.engine || 'rule_based', result.modelUsed || null]
     );

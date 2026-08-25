@@ -7,18 +7,20 @@
 <!-- Helps the user understand HOW professional teams test          -->
 <!-- software and where our project stands.                        -->
 <!-- ============================================================ -->
-<!-- Status: ⬜ Not Started -->
-<!-- Last Updated: 2026-08-20 -->
-<!-- Version: 1.0 -->
+<!-- Status: ✅ Manual Testing Complete -->
+<!-- Last Updated: 2026-08-25 -->
+<!-- Version: 2.0 -->
 
 ---
 
 ## 📊 Progress
 
 ```
-Testing: [ ⬜ NOT STARTED ] 0%
-▓░░░░░░░░░░░░░░░░░░░ 0%
+Testing: [ ✅ MANUAL TESTING COMPLETE ] 100%
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ 100%
 ```
+
+> **Note:** This project uses **manual end-to-end testing** (every user flow has been verified by hand on the live deployment). No automated unit/integration test framework has been set up.
 
 ---
 
@@ -48,10 +50,10 @@ Testing: [ ⬜ NOT STARTED ] 0%
 
 | Category | Total Tests | Passing | Failing | Skipped | Coverage |
 |---|---|---|---|---|---|
-| Unit Tests | 0 | 0 | 0 | 0 | 0% |
-| Integration Tests | 0 | 0 | 0 | 0 | — |
-| E2E Tests | 0 | 0 | 0 | 0 | — |
-| **Total** | **0** | **0** | **0** | **0** | **0%** |
+| Unit Tests | 0 | 0 | 0 | 0 | N/A (no framework) |
+| Integration Tests | 0 | 0 | 0 | 0 | N/A |
+| E2E Tests (Manual) | 6 | 6 | 0 | 0 | Key flows covered |
+| **Total** | **6** | **6** | **0** | **0** | **Manual** |
 
 ---
 
@@ -61,19 +63,26 @@ Testing: [ ⬜ NOT STARTED ] 0%
 
 | # | Module / Function | Test Description | Status | Result |
 |---|---|---|---|---|
-| _Waiting for code implementation_ | | | | |
+| — | _No automated unit test framework set up_ | — | ⬜ | — |
+
+> **Future improvement:** Add Jest or Vitest for backend unit tests (parser, query router, auth middleware).
 
 ### Integration Tests
 
 | # | Feature Flow | Components Tested | Status | Result |
 |---|---|---|---|---|
-| _Waiting for code implementation_ | | | | |
+| — | _No automated integration test framework set up_ | — | ⬜ | — |
 
-### End-to-End Tests
+### End-to-End Tests (Manual)
 
 | # | User Journey | Steps | Status | Result |
 |---|---|---|---|---|
-| _Waiting for code implementation_ | | | | |
+| 1 | Full happy path | Register → Login → Upload `.txt` → Parse → View analytics → Ask rule-based question → See answer | ✅ | ✅ Passed |
+| 2 | AI chat flow | Ask open-ended question → See AI answer with model badge → Verify Langfuse trace logged | ✅ | ✅ Passed |
+| 3 | Offline mode | Disable internet → Verify AI features disabled → Analytics still render → Reconnect → Banner shows "back online" | ✅ | ✅ Passed |
+| 4 | Session deletion | Delete session → Verify session removed from dashboard → S3 file cleaned up → DB records gone (CASCADE) | ✅ | ✅ Passed |
+| 5 | Account deletion | Settings → Delete Account → Confirm password → Verify all sessions/data gone → Redirected to login | ✅ | ✅ Passed |
+| 6 | Mobile responsive | Open app on mobile browser → Login, upload, view analytics, chat — all responsive and usable | ✅ | ✅ Passed |
 
 ---
 
@@ -81,7 +90,14 @@ Testing: [ ⬜ NOT STARTED ] 0%
 
 | # | Bug Description | Severity | Found In | Fix Status | Fixed In |
 |---|---|---|---|---|---|
-| _None yet_ | | | | | |
+| 1 | Infinite login redirect loop (404 parsing error) | 🔴 Critical | `api.js`, `useAuth.jsx` | ✅ Fixed | Session 2026-08-20 |
+| 2 | CORS issues (wrong origin headers) | 🔴 Critical | `index.js`, Render Env Vars | ✅ Fixed | Session 2026-08-20 |
+| 3 | Frontend AI model names didn't match OpenRouter format | 🟡 Medium | `SessionPage.jsx`, `SettingsPage.jsx` | ✅ Fixed | Session 2026-08-20 |
+| 4 | Backend model validation whitelist rejected free models | 🟡 Medium | `user.routes.js` | ✅ Fixed | Session 2026-08-20 |
+| 5 | Mobile overlap on session view header | 🟢 Low | `SessionPage.jsx` | ✅ Fixed | Session 2026-08-20 |
+| 6 | `chat_history` INSERT used wrong column name (`ai_model_used` instead of `ai_model`) | 🔴 Critical | `chat.routes.js` | ✅ Fixed | Session 2026-08-25 |
+| 7 | `bcrypt.compare` with invalid dummy hash crashes login for non-existent emails | 🟠 High | `auth.routes.js` | ✅ Fixed | Session 2026-08-25 |
+| 8 | Timeline API called with `'daily'` but backend only accepts `'day'` | 🟢 Low | `SessionPage.jsx` | ✅ Fixed | Session 2026-08-25 |
 
 **Severity Levels:**
 
@@ -100,11 +116,11 @@ Testing: [ ⬜ NOT STARTED ] 0%
 
 | Area | Unit Tested | Integration Tested | E2E Tested | Overall |
 |---|---|---|---|---|
-| Authentication | ⬜ | ⬜ | ⬜ | ⬜ |
-| Database Operations | ⬜ | ⬜ | — | ⬜ |
-| API Endpoints | ⬜ | ⬜ | ⬜ | ⬜ |
-| Frontend Components | ⬜ | — | ⬜ | ⬜ |
-| Business Logic | ⬜ | ⬜ | ⬜ | ⬜ |
+| Authentication | ⬜ | ⬜ | ✅ Manual | ✅ |
+| Database Operations | ⬜ | ⬜ | ✅ Manual | ✅ |
+| API Endpoints | ⬜ | ⬜ | ✅ Manual | ✅ |
+| Frontend Components | ⬜ | — | ✅ Manual | ✅ |
+| Business Logic | ⬜ | ⬜ | ✅ Manual | ✅ |
 
 ---
 

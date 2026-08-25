@@ -106,7 +106,7 @@ router.post('/login', authRateLimiter, async (req, res, next) => {
     const dummyHash = '$2a$12$dummyhashfortimingnormalization.thisisnotreal';
     const passwordMatch = user
       ? await bcrypt.compare(password, user.password_hash)
-      : await bcrypt.compare(password, dummyHash).then(() => false);
+      : await bcrypt.compare(password, dummyHash).then(() => false).catch(() => false);
 
     if (!user || !passwordMatch) {
       return next(createError('Incorrect email or password.', 401, 'INVALID_CREDENTIALS'));
